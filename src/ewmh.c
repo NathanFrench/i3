@@ -52,16 +52,34 @@ void ewmh_update_number_of_desktops(void) {
  */
 void ewmh_update_desktop_names(void) {
     Con *output;
-    int msg_length = 0;
+    size_t msg_length = 0;
 
     /* count the size of the property message to set */
     TAILQ_FOREACH(output, &(croot->nodes_head), nodes) {
         Con *ws;
         TAILQ_FOREACH(ws, &(output_get_content(output)->nodes_head), nodes) {
+            size_t len;
+
             if (STARTS_WITH(ws->name, "__"))
                 continue;
-            msg_length += strlen(ws->name) + 1;
+
+            len = strlen(ws->name) + 1;
+
+            /* check for overflow */
+            if (msg_length + len < msg_length) {
+                ELOG("Overflow.\n", window);
+                return;
+            }
+
+            msg_length += len; 
         }
+    }
+
+    if (msg_len == 0) {
+        ELOG("Empty message\n");
+
+        /* we don't want to allocate 0 bytes on the stack */
+        return;
     }
 
     char desktop_names[msg_length];
