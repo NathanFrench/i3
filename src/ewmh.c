@@ -120,6 +120,11 @@ void ewmh_update_desktop_viewport(void) {
         }
     }
 
+    if (num_desktops == 0) {
+        ELOG("num_desktops returned invalid\n");
+        return;
+    }
+    
     uint32_t viewports[num_desktops * 2];
 
     int current_position = 0;
