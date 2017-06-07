@@ -35,8 +35,10 @@ void init_dpi(void) {
         goto init_dpi_end;
     }
 
-    char *resource;
+    char *resource = NULL;
+
     xcb_xrm_resource_get_string(database, "Xft.dpi", NULL, &resource);
+
     if (resource == NULL) {
         DLOG("Resource Xft.dpi not specified, skipping.\n");
         goto init_dpi_end;
@@ -53,9 +55,7 @@ void init_dpi(void) {
     DLOG("Found Xft.dpi = %ld.\n", dpi);
 
 init_dpi_end:
-    if (resource != NULL) {
-        free(resource);
-    }
+    free(resource);
 
     if (database != NULL) {
         xcb_xrm_database_free(database);
