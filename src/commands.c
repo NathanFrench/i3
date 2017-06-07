@@ -68,6 +68,7 @@
         if (match_is_empty(current_match)) {            \
             while (!TAILQ_EMPTY(&owindows)) {           \
                 owindow *ow = TAILQ_FIRST(&owindows);   \
+                if (ow == NULL) continue;               \
                 TAILQ_REMOVE(&owindows, ow, owindows);  \
                 free(ow);                               \
             }                                           \
